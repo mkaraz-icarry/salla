@@ -1,0 +1,67 @@
+.navbar__logo
+{
+    width: 50px;
+    border-radius: 4px;
+}
+.navbar-nav .nav-item .nav-link{
+    transition: .3s;
+    font-weight: 600
+}
+.navbar-nav .nav-item:hover .nav-link,
+.navbar-nav .nav-item.active .nav-link{
+    color: #F1B70E;
+}
+.main__head span
+{
+    color: #F1B70E;
+}
+.icarry_btn,
+.icarry_btn:hover,
+.icarry_btn:focus,
+.icarry_btn:hover
+{
+    background-color: #F1B70E;
+    color: #fff;
+    outline: 0;
+    box-shadow: none;
+}
+.page-item .page-link
+{
+    color: #F1B70E;
+}
+.page-item.active .page-link
+{
+    background-color: #F1B70E;
+    border-color: #F1B70E;
+}
+.page-item .page-link
+{
+    box-shadow: none;
+    outline: 0;
+}
+#check-connectivity-loading,
+.check-connectivity-loading
+{
+    fill: #fff;
+    animation: Sinner .8s infinite linear;
+}
+
+
+button.disabled {
+    pointer-events: none;
+}
+.order__tracking-number,
+.order__tracking-number:hover
+{
+    color: #F1B70E;
+}
+
+/*Animation*/
+@keyframes Sinner {
+    0% {
+        transform: rotateZ(0deg);
+    }
+    100% {
+        transform: rotateZ(360deg);
+    }
+}
