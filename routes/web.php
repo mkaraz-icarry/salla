@@ -564,7 +564,6 @@ Route::post('/api/validate-app-setting', function (Request $request) {
         //     $user_info->iCARRYEmail = $requestBody['data']['email'];
         //     $user_info->iCARRYPassword = $requestBody['data']['password'];
         //     $user_info->save();
-
         //     return response(['message' => ""], 200);
         // }
 
