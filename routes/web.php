@@ -571,8 +571,6 @@ Route::post('/api/validate-app-setting', function (Request $request) {
     }
 
     //$icarryUserData = $ICarryTokenResponse['message'];
-
-
     return response(['message' => ""], 500);
 });
 
