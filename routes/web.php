@@ -482,22 +482,38 @@ Route::get('/oauth/callback', function () {
 Route::post('/api/webhook', function (Request $request) {
     try {
 
-        $requestBody = $request->input();
-        //Start Webhook Validation
-        Log::debug("request => [webhook]" . json_encode($requestBody));
-        $secret = getenv('WEBHOOK_SECRET');
-        $requestHMAC = $_SERVER['HTTP_X_SALLA_SIGNATURE'];
-        $requestBody = file_get_contents('php://input');
-        $computedHMAC = hash_hmac('sha256', $requestBody, $secret);
-        if ($requestHMAC !== $computedHMAC) {
-            return http_response_code($requestHMAC === $computedHMAC ? 200 : 401);
+        // Start Webhook Validation
+        $secret = env('WEBHOOK_SECRET') ?: getenv('WEBHOOK_SECRET');
+        if (!$secret) {
+            Log::error('WEBHOOK_SECRET is not set');
+            return response(['message' => 'Server misconfigured'], 500);
         }
-        Log::debug("Webhook signature is valid");
-        //End Webhook Validation
 
-        $requestBody = json_decode($requestBody);
-        $merchantId = $requestBody->merchant;
-        $requestData = $requestBody->data;
+        $requestHMAC = $request->header('X-Salla-Signature');
+        if (!$requestHMAC) {
+            Log::warning('Missing X-Salla-Signature header', [
+                'headers' => $request->headers->all(),
+            ]);
+            return response(['message' => 'Missing signature'], 401);
+        }
+
+        $rawBody = $request->getContent();
+        $computedHMAC = hash_hmac('sha256', $rawBody, $secret);
+
+        if (!hash_equals($computedHMAC, $requestHMAC)) {
+            Log::warning('Invalid webhook signature', [
+                'computed' => $computedHMAC,
+                'received' => $requestHMAC,
+            ]);
+            return response(['message' => 'Invalid signature'], 401);
+        }
+
+        Log::debug('Webhook signature is valid');
+        // End Webhook Validation
+
+        $requestBody = json_decode($rawBody);
+        $merchantId = $requestBody->merchant ?? null;
+        $requestData = $requestBody->data ?? null;
 
 
         // do stuff
@@ -517,7 +533,7 @@ Route::post('/api/webhook', function (Request $request) {
                 }
                 return handleOrderCreateEvent($merchantId, $requestData);
         }
-        response(['message' => ""], 200);
+        return response(['message' => ""], 200);
     } catch (\Exception $e) {
         Log::error('An error occurred: ' . $e->getMessage());
         return response(['message' => ""], 500);
