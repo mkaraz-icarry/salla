@@ -575,7 +575,6 @@ Route::post('/api/validate-app-setting', function (Request $request) {
 
     return response(['message' => ""], 500);
 });
-
 /**
  * End APIs
  */
