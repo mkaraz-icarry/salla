@@ -515,7 +515,10 @@ Route::post('/api/webhook', function (Request $request) {
         $requestBody = json_decode($rawBody);
         $merchantId = $requestBody->merchant ?? null;
         $requestData = $requestBody->data ?? null;
-
+        
+        Log::debug('Webhook raw request body', [
+            'raw_body' => $rawBody
+        ]);
 
         // do stuff
         switch ($requestBody->event) {
