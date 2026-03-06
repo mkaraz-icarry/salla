@@ -123,6 +123,7 @@ function validateToken($merchantId) {
 }
 
 function handleOrderCreateEvent($merchantId, $order) {
+    Log::debug("Inside handle order creation");
     // try {
 
     // } catch (\Exception $e) {
